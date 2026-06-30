@@ -2,10 +2,10 @@
 
 Generated from `higgsfield model list` and `higgsfield model get <job_set_type>`. Run those commands for the live schema.
 
-Required flags are listed per model below. Media inputs (`--image`, `--start-image`, `--end-image`, `--video`, `--audio`) accept either a UUID (upload id or previous job id) or a local file path; paths are auto-uploaded.
+Required flags are listed per model below. Media inputs (`--image`, `--image-references`, `--start-image`, `--end-image`, `--video`, `--video-references`, `--audio`, `--audio-references`) accept either a UUID (upload id or previous job id) or a local file path; paths are auto-uploaded.
 
 
-## Image (21)
+## Image (22)
 
 ### cinematic_studio_2_5 — Cinematic Studio 2.5
 
@@ -122,6 +122,27 @@ higgsfield generate create image_background_remover --image ./image.png --wait
 | `--prompt` | true | — | string |
 | `--resolution` | false | `1k` | `1k`, `2k`, `4k` |
 
+### nano_banana_2_lite — Nano Banana 2 Lite
+
+| flag | required | default | values |
+|---|---|---|---|
+| `--aspect_ratio` | false | `1:1` | string |
+| `--image-references` (or `--image`) (0..14) | false | — | UUID or path |
+| `--prompt` | true | — | string |
+| `--resolution` | false | `1k` | string |
+
+Constraints:
+
+- A non-empty prompt or at least one image reference is required.
+- At most 14 image references are allowed.
+- `--aspect_ratio auto` requires at least one image reference.
+
+Example:
+
+```bash
+higgsfield generate create nano_banana_2_lite --prompt "clean product sketch, white background" --image ./reference.png --resolution 1k --wait
+```
+
 ### nano_banana_flash — Nano Banana 2
 
 | flag | required | default | values |
@@ -220,7 +241,7 @@ higgsfield generate create recraft_v4_1 --prompt "minimal vector logo mark for a
 | `--aspect_ratio` | false | `1:1` | `1:1`, `4:3`, `3:4`, `16:9`, `9:16` |
 | `--prompt` | true | — | string |
 
-## Video (20)
+## Video (21)
 
 ### brain_activity — Virality Predictor
 
@@ -281,6 +302,29 @@ Example:
 
 ```bash
 higgsfield generate create grok_video_v15 --prompt "cinematic handheld shot, neon rainy street" --start-image ./image.png --duration 5 --resolution 720p --wait
+```
+
+### gemini_omni — Gemini Omni Flash
+
+| flag | required | default | values |
+|---|---|---|---|
+| `--aspect_ratio` | false | `16:9` | string |
+| `--duration` | false | `8` | integer |
+| `--image-references` (or `--image`) (0..7) | false | — | UUID or path |
+| `--prompt` | true | — | string |
+| `--resolution` | false | `720p` | string |
+| `--video-references` (or `--video`) (0..1) | false | — | UUID or path |
+
+Constraints:
+
+- At most 1 video reference is allowed.
+- When a video reference is provided, at most 5 image references are allowed.
+- At most 7 image references are allowed.
+
+Example:
+
+```bash
+higgsfield generate create gemini_omni --prompt "cinematic product reveal with smooth camera motion" --image ./product.png --duration 8 --resolution 720p --wait
 ```
 
 ### kling2_6 — Kling 2.6 Video

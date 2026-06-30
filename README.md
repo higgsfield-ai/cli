@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/v/@higgsfield/cli?style=flat-square)](https://www.npmjs.com/package/@higgsfield/cli)
 [![license](https://img.shields.io/github/license/higgsfield-ai/cli?style=flat-square)](./LICENSE)
 
-Generate images, videos, 3D assets, audio, and finished-video analysis from the terminal using 30+ [Higgsfield AI](https://higgsfield.ai) models — Nano Banana Pro, FLUX.2, Soul V2, Veo 3.1, Kling v3.0, Seedance 2.0, Marketing Studio, Virality Predictor, and more. Train face-faithful Soul characters and produce branded marketing assets without leaving your shell.
+Generate images, videos, 3D assets, audio, and finished-video analysis from the terminal using 40+ [Higgsfield AI](https://higgsfield.ai) models — Nano Banana Pro, Nano Banana 2 Lite, Gemini Omni Flash, FLUX.2, Soul V2, Veo 3.1, Kling v3.0, Seedance 2.0, Marketing Studio, Virality Predictor, and more. Train face-faithful Soul characters and produce branded marketing assets without leaving your shell.
 
 ![Higgsfield CLI demo](./demo.png)
 
@@ -196,13 +196,14 @@ higgsfield generate create text2image_soul_v2 \
 
 ## Models
 
-30+ image, video, 3D, and audio models. Per-model parameters, defaults, and enums: [MODELS.md](./MODELS.md). Live catalog: `higgsfield model list`.
+40+ image, video, 3D, and audio models. Per-model parameters, defaults, and enums: [MODELS.md](./MODELS.md). Live catalog: `higgsfield model list`.
 
-### Image (21)
+### Image (22)
 
 | job_set_type | name |
 |---|---|
 | `nano_banana_2` | Nano Banana Pro |
+| `nano_banana_2_lite` | Nano Banana 2 Lite |
 | `nano_banana_flash` | Nano Banana 2 |
 | `nano_banana` | Nano Banana |
 | `flux_2` | FLUX.2 |
@@ -224,11 +225,12 @@ higgsfield generate create text2image_soul_v2 \
 | `soul_location` | Soul Location |
 | `marketing_studio_image` | Marketing Studio Image |
 
-### Video (20)
+### Video (21)
 
 | job_set_type | name |
 |---|---|
 | `brain_activity` | Virality Predictor |
+| `gemini_omni` | Gemini Omni Flash |
 | `veo3_1` | Google Veo 3.1 |
 | `veo3_1_lite` | Google Veo 3.1 Lite |
 | `veo3` | Google Veo 3 |
