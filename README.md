@@ -346,9 +346,17 @@ site and a git repo; you clone it, edit the code under `app/`, push, and deploy 
 preview or production URL. The build runs on the Higgsfield platform from the pushed
 branch.
 
+`create` requires `--type` — what kind of product you're building:
+
+- **`website`** — a standalone site with no Higgsfield integration (no
+  "Sign in with Higgsfield", no requests to Higgsfield). Landing pages,
+  portfolios, general tools.
+- **`app`** — a product tightly integrated with Higgsfield: its users sign in
+  with Higgsfield and generate images/videos through the Higgsfield SDK.
+
 ```bash
 # 1. Create the site + its git repo (prints a website_id)
-higgsfield website create
+higgsfield website create --type website   # or --type app
 
 # 2. Get the clone URL, branch, and a scoped git token
 higgsfield website repo-access <website_id>
@@ -363,6 +371,10 @@ git -c http.extraHeader="Authorization: token <token>" push origin <branch>
 # 4. Deploy to a preview URL, then ship to production when ready
 higgsfield website deploy <website_id> --env preview
 higgsfield website deploy <website_id> --env production
+
+# Or publish: deploy to production AND list the site on the Higgsfield
+# community feed ("show in feed") where others can discover and remix it
+higgsfield website publish <website_id>
 
 # Check deploy status and live URLs any time
 higgsfield website status <website_id>
@@ -404,7 +416,7 @@ Add `--json` to any command for machine-readable output.
 | `higgsfield soul-id` | train and manage Soul characters |
 | `higgsfield marketing-studio` | branded ads (avatars, products, ad references, brand kits, ad formats, DTC Ads Engine) |
 | `higgsfield product-photoshoot` | brand image generation with mode-specific enhancement |
-| `higgsfield website` | create / edit (via git repo access) / deploy / inspect DB / manage secrets for full-stack websites |
+| `higgsfield website` | create (`--type website\|app`) / edit (via git repo access) / deploy / publish to the community feed / inspect DB / manage secrets for full-stack websites |
 | `higgsfield version` | print build info |
 
 Run `higgsfield <command> --help` for flags and examples (also `higgsfield generate create --help`, `higgsfield soul-id create --help`, etc.).
