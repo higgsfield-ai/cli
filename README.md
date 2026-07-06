@@ -15,6 +15,7 @@ Generate images, videos, 3D assets, audio, and finished-video analysis from the 
 - [Examples](#examples)
 - [Models](#models)
 - [Workflows](#workflows)
+- [Websites](#websites)
 - [Commands](#commands)
 - [Flags](#flags)
 - [Updating](#updating)
@@ -346,6 +347,70 @@ higgsfield generate get <job_id>
 higgsfield generate wait <job_id>
 ```
 
+## Websites
+
+Build and deploy full-stack websites from the terminal. Each site is a React 19 +
+TanStack Start app, server-rendered as a single Cloudflare Worker, with D1, R2, KV,
+Durable Objects, and Containers available. `higgsfield website create` provisions the
+site and a git repo; you clone it, edit the code under `app/`, push, and deploy to a
+preview or production URL. The build runs on the Higgsfield platform from the pushed
+branch.
+
+`create` requires `--type` — what kind of product you're building:
+
+- **`website`** — a standalone site with no Higgsfield integration (no
+  "Sign in with Higgsfield", no requests to Higgsfield). Landing pages,
+  portfolios, general tools.
+- **`app`** — a product tightly integrated with Higgsfield: its users sign in
+  with Higgsfield and generate images/videos through the Higgsfield SDK.
+
+```bash
+# 1. Create the site + its git repo (prints a website_id)
+higgsfield website create --type website   # or --type app
+
+# 2. Get the clone URL, branch, and a scoped git token
+higgsfield website repo-access <website_id>
+
+# 3. Clone with the token, edit under app/, commit, and push
+git -c http.extraHeader="Authorization: token <token>" clone <repo_url> <slug>
+cd <slug>
+# ...edit files under app/ ...
+git add -A && git commit -m "initial build"
+git -c http.extraHeader="Authorization: token <token>" push origin <branch>
+
+# 4. Deploy to a preview URL, then ship to production when ready
+higgsfield website deploy <website_id> --env preview
+higgsfield website deploy <website_id> --env production
+
+# Or publish: deploy to production AND list the site on the Higgsfield
+# community feed ("show in feed") where others can discover and remix it
+higgsfield website publish <website_id>
+
+# Check deploy status and live URLs any time
+higgsfield website status <website_id>
+```
+
+Inspect the site's database (read-only) and manage secrets (staged until the next deploy):
+
+```bash
+higgsfield website db tables <website_id>
+higgsfield website db rows <website_id> --table users --limit 20
+higgsfield website db query <website_id> --sql "SELECT count(*) FROM users"
+
+higgsfield website secrets set <website_id> --name STRIPE_SECRET_KEY --value sk_live_...
+higgsfield website secrets list <website_id>
+```
+
+List the sites you own, or permanently delete one (removes the site, database, storage,
+and repo):
+
+```bash
+higgsfield website list
+higgsfield website delete <website_id>
+```
+
+Add `--json` to any command for machine-readable output.
+
 ## Commands
 
 | Command | Purpose |
@@ -361,6 +426,7 @@ higgsfield generate wait <job_id>
 | `higgsfield soul-id` | train and manage Soul characters |
 | `higgsfield marketing-studio` | branded ads (avatars, products, ad references, brand kits, ad formats, DTC Ads Engine) |
 | `higgsfield product-photoshoot` | brand image generation with mode-specific enhancement |
+| `higgsfield website` | create (`--type website\|app`) / edit (via git repo access) / deploy / publish to the community feed / inspect DB / manage secrets for full-stack websites |
 | `higgsfield version` | print build info |
 
 Run `higgsfield <command> --help` for flags and examples (also `higgsfield generate create --help`, `higgsfield soul-id create --help`, etc.).
