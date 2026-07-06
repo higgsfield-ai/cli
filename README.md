@@ -352,8 +352,8 @@ higgsfield generate wait <job_id>
 Build and deploy full-stack websites from the terminal. Each site is a React 19 +
 TanStack Start app, server-rendered as a single Cloudflare Worker, with D1, R2, KV,
 Durable Objects, and Containers available. `higgsfield website create` provisions the
-site and a git repo; you clone it, edit the code under `app/`, push, and deploy to a
-preview or production URL. The build runs on the Higgsfield platform from the pushed
+site and a git repo; you clone it, edit the code under `app/`, push, and deploy to
+its live URL. The build runs on the Higgsfield platform from the pushed
 branch.
 
 `create` requires `--type` — what kind of product you're building:
@@ -378,15 +378,14 @@ cd <slug>
 git add -A && git commit -m "initial build"
 git -c http.extraHeader="Authorization: token <token>" push origin <branch>
 
-# 4. Deploy to a preview URL, then ship to production when ready
-higgsfield website deploy <website_id> --env preview
-higgsfield website deploy <website_id> --env production
+# 4. Deploy — ships the live site
+higgsfield website deploy <website_id>
 
-# Or publish: deploy to production AND list the site on the Higgsfield
+# Or publish: deploy AND list the site on the Higgsfield
 # community feed ("show in feed") where others can discover and remix it
 higgsfield website publish <website_id>
 
-# Check deploy status and live URLs any time
+# Check deploy status and the live URL any time
 higgsfield website status <website_id>
 ```
 
