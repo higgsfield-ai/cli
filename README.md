@@ -400,12 +400,10 @@ higgsfield website secrets set <website_id> --name STRIPE_SECRET_KEY --value sk_
 higgsfield website secrets list <website_id>
 ```
 
-List the sites you own, or permanently delete one (removes the site, database, storage,
-and repo):
+List the sites you own:
 
 ```bash
 higgsfield website list
-higgsfield website delete <website_id>
 ```
 
 Add `--json` to any command for machine-readable output.
