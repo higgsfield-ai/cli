@@ -198,7 +198,7 @@ higgsfield generate create text2image_soul_v2 \
 
 40+ image, video, 3D, and audio models. Per-model parameters, defaults, and enums: [MODELS.md](./MODELS.md). Live catalog: `higgsfield model list`.
 
-### Image (22)
+### Image (23)
 
 | job_set_type | name |
 |---|---|
@@ -223,9 +223,10 @@ higgsfield generate create text2image_soul_v2 \
 | `cinematic_studio_2_5` | Cinematic Studio 2.5 |
 | `soul_cinematic` | Soul Cinematic |
 | `soul_location` | Soul Location |
+| `soul_cast` | Soul Cast |
 | `marketing_studio_image` | Marketing Studio Image |
 
-### Video (21)
+### Video (22)
 
 | job_set_type | name |
 |---|---|
@@ -238,6 +239,7 @@ higgsfield generate create text2image_soul_v2 \
 | `kling3_0_turbo` | Kling 3.0 Turbo |
 | `kling2_6` | Kling 2.6 Video |
 | `seedance_2_0` | Seedance 2.0 |
+| `seedance_2_0_mini` | Seedance 2.0 Mini |
 | `seedance1_5` | Seedance 1.5 Pro |
 | `wan2_7` | Wan 2.7 |
 | `wan2_6` | Wan 2.6 Video |
@@ -246,34 +248,40 @@ higgsfield generate create text2image_soul_v2 \
 | `grok_video_v15` | Grok Video 1.5 |
 | `cinematic_studio_3_0` | Cinematic Studio 3.0 |
 | `cinematic_studio_video` | Cinematic Studio Video |
+| `cinematic_studio_video_3_5` | Cinematic Studio Video 3.5 |
 | `cinematic_studio_video_v2` | Cinematic Studio Video V2 |
-| `soul_cast` | Soul Cast |
 | `marketing_studio_video` | Marketing Studio Video |
 | `video_background_remover` | Video Background Remover |
 
-### 3D (1)
+### 3D (5)
 
 | job_set_type | name |
 |---|---|
 | `multi_image_to_3d` | Multi-Image to 3D |
+| `image_to_3d` | Image to 3D |
+| `tripo_3d` | Text to 3D |
+| `sam_3_3d` | 3D Objects |
+| `3d_rigging` | 3D Rigging |
 
-### Audio (3)
+### Audio (5)
 
 | job_set_type | name |
 |---|---|
+| `seed_audio` | Seed Audio 1.0 |
 | `sonilo_music` | Sonilo Music |
 | `mirelo_text_to_audio` | Mirelo Text to Audio |
 | `text2speech_v2` | Text to Speech |
+| `inworld_text_to_speech` | Inworld Text to Speech |
 
 `text2speech_v2` turns text into speech with a chosen voice. Pick the engine with
-`--model` (`elevenlabs`, `minimax`, `seed_speech`, `vibe_voice`, `cozy_voice`) and the
+`--variant` (`elevenlabs`, `minimax`, `seed_speech`, `vibe_voice`, `cozy_voice`) and the
 voice with `--voice_type` (`preset` or `element`) + `--voice_id`. Discover voices with
 `higgsfield voices list`.
 
 ```bash
 higgsfield generate create text2speech_v2 \
   --prompt "Hello from Higgsfield" \
-  --model elevenlabs \
+  --variant elevenlabs \
   --voice_type preset \
   --voice_id <voice_id> \
   --wait
@@ -391,9 +399,9 @@ npm install -g @higgsfield/cli@latest
 Pin to a specific release:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/higgsfield-ai/cli/main/install.sh | sh -s -- --tag v0.1.22
+curl -fsSL https://raw.githubusercontent.com/higgsfield-ai/cli/main/install.sh | sh -s -- --tag v1.1.2
 # or
-npm install -g @higgsfield/cli@0.1.22
+npm install -g @higgsfield/cli@1.1.2
 ```
 
 ## Uninstall
