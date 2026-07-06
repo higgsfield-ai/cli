@@ -364,9 +364,16 @@ branch.
 - **`app`** — a product tightly integrated with Higgsfield: its users sign in
   with Higgsfield and generate images/videos through the Higgsfield SDK.
 
+Pass `--subdomain` to choose the site's subdomain — it becomes the slug, so the
+live URL is `<subdomain>.<host>`. Always set one derived from the site's name
+(lowercase, DNS-safe: letters, digits, single hyphens); omit it only if you want
+a random subdomain. Reserved labels (e.g. `api`, `www`) and already-taken
+subdomains are rejected — pick another.
+
 ```bash
 # 1. Create the site + its git repo (prints a website_id)
-higgsfield website create --type website   # or --type app
+#    Always pick a --subdomain from the site's name.
+higgsfield website create --type website --subdomain my-cool-site   # or --type app
 
 # 2. Get the clone URL, branch, and a scoped git token
 higgsfield website repo-access <website_id>
