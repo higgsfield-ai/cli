@@ -385,11 +385,12 @@ cd <slug>
 git add -A && git commit -m "initial build"
 git -c http.extraHeader="Authorization: token <token>" push origin <branch>
 
-# 4. Deploy — ships the live site
+# 4. Deploy — ships the live site (run it again after every change)
 higgsfield website deploy <website_id>
 
-# Or publish: deploy AND list the site on the Higgsfield
-# community feed ("show in feed") where others can discover and remix it
+# Publish — list the site on the Higgsfield community feed ("show in feed")
+# where others can discover and remix it. Publish does NOT deploy: it lists
+# whatever `deploy` last shipped, so deploy first (and again after any change).
 higgsfield website publish <website_id>
 
 # Check deploy status and the live URL any time
