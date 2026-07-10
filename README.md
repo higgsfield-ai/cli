@@ -391,7 +391,14 @@ higgsfield website deploy <website_id>
 # Publish — list the site on the Higgsfield community feed ("show in feed")
 # where others can discover and remix it. Publish does NOT deploy: it lists
 # whatever `deploy` last shipped, so deploy first (and again after any change).
+# Prints the community-feed listing URL.
 higgsfield website publish <website_id>
+
+# Enter the $100k Higgsfield app contest (type: app). The entry PUBLISHES the
+# app for you — no separate `publish` needed; it just needs a live deploy and
+# filled page metadata. Pass one or more public social links (Instagram /
+# TikTok / YouTube / X) promoting it. Re-running overwrites the links.
+higgsfield website contest <website_id> --url https://x.com/<user>/status/...
 
 # Check deploy status and the live URL any time
 higgsfield website status <website_id>
@@ -441,7 +448,7 @@ Add `--json` to any command for machine-readable output.
 | `higgsfield soul-id` | train and manage Soul characters |
 | `higgsfield marketing-studio` | branded ads (avatars, products, ad references, brand kits, ad formats, DTC Ads Engine) |
 | `higgsfield product-photoshoot` | brand image generation with mode-specific enhancement |
-| `higgsfield website` | create (`--type website\|app`) / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / inspect DB / manage secrets for full-stack websites |
+| `higgsfield website` | create (`--type website\|app`) / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / enter the app contest (auto-publishes) / inspect DB / manage secrets for full-stack websites |
 | `higgsfield version` | print build info |
 
 Run `higgsfield <command> --help` for flags and examples (also `higgsfield generate create --help`, `higgsfield soul-id create --help`, etc.).
