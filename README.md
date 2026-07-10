@@ -397,6 +397,16 @@ higgsfield website publish <website_id>
 higgsfield website status <website_id>
 ```
 
+Rename a site's subdomain (the slug in its public URL). The site is re-deployed
+under the new subdomain and the **old subdomain stops working** — share the new
+URL afterwards. Storage (database, files, config) and the git repo are kept.
+Blocking like deploy (a couple of minutes); reserved or taken subdomains are
+rejected — pick another:
+
+```bash
+higgsfield website rename <website_id> --subdomain my-new-name
+```
+
 Inspect the site's database (read-only) and manage secrets (staged until the next deploy):
 
 ```bash
@@ -431,7 +441,7 @@ Add `--json` to any command for machine-readable output.
 | `higgsfield soul-id` | train and manage Soul characters |
 | `higgsfield marketing-studio` | branded ads (avatars, products, ad references, brand kits, ad formats, DTC Ads Engine) |
 | `higgsfield product-photoshoot` | brand image generation with mode-specific enhancement |
-| `higgsfield website` | create (`--type website\|app`) / edit (via git repo access) / deploy / publish to the community feed / inspect DB / manage secrets for full-stack websites |
+| `higgsfield website` | create (`--type website\|app`) / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / inspect DB / manage secrets for full-stack websites |
 | `higgsfield version` | print build info |
 
 Run `higgsfield <command> --help` for flags and examples (also `higgsfield generate create --help`, `higgsfield soul-id create --help`, etc.).
