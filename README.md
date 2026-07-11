@@ -364,6 +364,25 @@ branch.
 - **`app`** — a product tightly integrated with Higgsfield: its users sign in
   with Higgsfield and generate images/videos through the Higgsfield SDK.
 
+`--type app` also requires `--template` — the v2 starter layout the repo is
+scaffolded from. The chosen layout ships as real code, already wired as the
+home page at `app/src/layouts/<template>.tsx`. Adapt it in place (edit the
+shipped layout and thread real data through it) — don't rebuild the screen from
+scratch or swap layouts. The layout is only the UI shell with demo placeholders;
+the finished product still needs real business logic. After cloning, read
+`app/src/layouts/AGENTS.md` and `app/src/components/AGENTS.md` for the layout
+and component contract.
+
+| Template | Pick when |
+|---|---|
+| `studio` | full creative workspace — projects sidebar, floating prompt dock, edge-to-edge generations feed; multi-project generation tools |
+| `preset` | pick-a-style-then-generate — persistent left creation rail beside a browsable preset grid with a History tab; also the base for step-by-step wizards and upload-configure-iterate workspaces |
+| `app-detail` | a single tool's landing page — two-column generator hero plus how-it-works steps; the simple app |
+
+Other shapes (before/after slider, wizard, upload-configure-iterate) map to the
+closest of these three. `custom` scaffolds a bare shell with no layout — use it
+only when you explicitly want to build the UI from scratch; it's never a default.
+
 Pass `--subdomain` to choose the site's subdomain — it becomes the slug, so the
 live URL is `<subdomain>.<host>`. Always set one derived from the site's name
 (lowercase, DNS-safe: letters, digits, single hyphens); omit it only if you want
@@ -373,7 +392,9 @@ subdomains are rejected — pick another.
 ```bash
 # 1. Create the site + its git repo (prints a website_id)
 #    Always pick a --subdomain from the site's name.
-higgsfield website create --type website --subdomain my-cool-site   # or --type app
+higgsfield website create --type website --subdomain my-cool-site
+# apps also pick a starter template: studio | preset | app-detail
+higgsfield website create --type app --template studio --subdomain my-cool-app
 
 # 2. Get the clone URL, branch, and a scoped git token
 higgsfield website repo-access <website_id>
@@ -381,7 +402,11 @@ higgsfield website repo-access <website_id>
 # 3. Clone with the token, edit under app/, commit, and push
 git -c http.extraHeader="Authorization: token <token>" clone <repo_url> <slug>
 cd <slug>
-# ...edit files under app/ ...
+# The scaffolded clone has no git identity — set one or the first commit fails:
+git config user.email "agent@higgsfield.ai" && git config user.name "Higgsfield Agent"
+# ...edit files under app/ (bun-only repo: bun install / bun add / bunx /
+#    bun run typecheck|build — never npm/npx/yarn; app/src/routeTree.gen.ts
+#    is generated, never hand-edit it) ...
 git add -A && git commit -m "initial build"
 git -c http.extraHeader="Authorization: token <token>" push origin <branch>
 
@@ -448,7 +473,7 @@ Add `--json` to any command for machine-readable output.
 | `higgsfield soul-id` | train and manage Soul characters |
 | `higgsfield marketing-studio` | branded ads (avatars, products, ad references, brand kits, ad formats, DTC Ads Engine) |
 | `higgsfield product-photoshoot` | brand image generation with mode-specific enhancement |
-| `higgsfield website` | create (`--type website\|app`) / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / enter the app contest (auto-publishes) / inspect DB / manage secrets for full-stack websites |
+| `higgsfield website` | create (`--type website\|app`; apps pick a starter `--template`: `studio` / `preset` / `app-detail`) / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / enter the app contest (auto-publishes) / inspect DB / manage secrets for full-stack websites |
 | `higgsfield version` | print build info |
 
 Run `higgsfield <command> --help` for flags and examples (also `higgsfield generate create --help`, `higgsfield soul-id create --help`, etc.).
