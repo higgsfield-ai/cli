@@ -364,24 +364,29 @@ branch.
 - **`app`** — a product tightly integrated with Higgsfield: its users sign in
   with Higgsfield and generate images/videos through the Higgsfield SDK.
 
-`--type app` also requires `--template` — the v2 starter layout the repo is
-scaffolded from. The chosen layout ships as real code, already wired as the
-home page at `app/src/layouts/<template>.tsx`. Adapt it in place (edit the
-shipped layout and thread real data through it) — don't rebuild the screen from
-scratch or swap layouts. The layout is only the UI shell with demo placeholders;
-the finished product still needs real business logic. After cloning, read
-`app/src/layouts/AGENTS.md` and `app/src/components/AGENTS.md` for the layout
-and component contract.
+`--type app` also requires `--template`. The flag has exactly four choices:
 
 | Template | Pick when |
 |---|---|
-| `studio` | full creative workspace — projects sidebar, floating prompt dock, edge-to-edge generations feed; multi-project generation tools |
-| `preset` | pick-a-style-then-generate — persistent left creation rail beside a browsable preset grid with a History tab; also the base for step-by-step wizards and upload-configure-iterate workspaces |
-| `app-detail` | a single tool's landing page — two-column generator hero plus how-it-works steps; the simple app |
+| `app-detail` | a single tool's public landing page, with a generator hero and how-it-works flow |
+| `preset` | pick-a-style generation, preset galleries, wizards, or upload/configure/iterate workflows |
+| `studio` | a full creative workspace with projects, prompt dock, settings, and a generations feed |
+| `custom` | a bare scaffold with no shipped layout; use only when the user explicitly requests a custom/bare scaffold |
 
-Other shapes (before/after slider, wizard, upload-configure-iterate) map to the
-closest of these three. `custom` scaffolds a bare shell with no layout — use it
-only when you explicitly want to build the UI from scratch; it's never a default.
+Pick the closest of `app-detail`, `preset`, and `studio`. Agents must never
+choose `custom` by default.
+
+For every non-custom app template, the starter repo ships real code at
+`app/src/layouts/<template>.tsx`, already wired as the home page. Adapt that
+layout in place and thread real data through it; do not rebuild it, replace it,
+or swap it for another layout. The shipped UI includes demo placeholders, so
+it still needs the product's real business logic. After cloning, read both
+`app/src/layouts/AGENTS.md` and `app/src/components/AGENTS.md` before editing.
+
+Template validation happens locally: a missing or invalid app template fails
+before authentication or any backend call. `--type website` does not require a
+template. If `--template` is supplied for a standalone website, the CLI ignores
+it and omits it from both the backend request and the create result.
 
 Pass `--subdomain` to choose the site's subdomain — it becomes the slug, so the
 live URL is `<subdomain>.<host>`. Always set one derived from the site's name
@@ -389,12 +394,47 @@ live URL is `<subdomain>.<host>`. Always set one derived from the site's name
 a random subdomain. Reserved labels (e.g. `api`, `www`) and already-taken
 subdomains are rejected — pick another.
 
+Create a standalone website or an app using the closest starter template:
+
 ```bash
-# 1. Create the site + its git repo (prints a website_id)
-#    Always pick a --subdomain from the site's name.
-higgsfield website create --type website --subdomain my-cool-site
-# apps also pick a starter template: studio | preset | app-detail
-higgsfield website create --type app --template studio --subdomain my-cool-app
+higgsfield website create --type website
+
+higgsfield website create \
+  --type app \
+  --template app-detail
+
+higgsfield website create \
+  --type app \
+  --template preset \
+  --subdomain my-app
+
+higgsfield website create \
+  --type app \
+  --template studio
+```
+
+App create results preserve the selected template. Human-readable table output
+includes a **Template** column (alongside Website ID, Type, Slug, Name, Preview
+URL, and Production URL), and non-custom apps also print the shipped layout
+path. JSON output includes `"template"` for apps:
+
+```json
+{
+  "website_id": "<website_id>",
+  "type": "app",
+  "template": "studio"
+}
+```
+
+Standalone website results omit `template`, including when an ignored
+`--template` was supplied; table output leaves the Template cell empty, while
+JSON has no `template` field.
+
+Continue with the returned `website_id`:
+
+```bash
+# 1. Create the site + its git repo using one of the commands above.
+#    Prefer a DNS-safe --subdomain derived from the site's name.
 
 # 2. Get the clone URL, branch, and a scoped git token
 higgsfield website repo-access <website_id>
@@ -473,7 +513,7 @@ Add `--json` to any command for machine-readable output.
 | `higgsfield soul-id` | train and manage Soul characters |
 | `higgsfield marketing-studio` | branded ads (avatars, products, ad references, brand kits, ad formats, DTC Ads Engine) |
 | `higgsfield product-photoshoot` | brand image generation with mode-specific enhancement |
-| `higgsfield website` | create (`--type website\|app`; apps pick a starter `--template`: `studio` / `preset` / `app-detail`) / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / enter the app contest (auto-publishes) / inspect DB / manage secrets for full-stack websites |
+| `higgsfield website` | create (`--type website\|app`; apps require `--template app-detail\|preset\|studio\|custom`, with `custom` only by explicit request) / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / enter the app contest (auto-publishes) / inspect DB / manage secrets for full-stack websites |
 | `higgsfield version` | print build info |
 
 Run `higgsfield <command> --help` for flags and examples (also `higgsfield generate create --help`, `higgsfield soul-id create --help`, etc.).
