@@ -16,6 +16,7 @@ Generate images, videos, 3D assets, audio, and finished-video analysis from the 
 - [Models](#models)
 - [Workflows](#workflows)
 - [Video Explainer](#video-explainer)
+- [Games](#games)
 - [Websites](#websites)
 - [Commands](#commands)
 - [Flags](#flags)
@@ -205,6 +206,35 @@ Repeat the audio/video calls once per block. `blocks.json` maps every clip job t
 its matching audio job in playback order. See
 [MODELS.md](./MODELS.md#video-explainer-jobs) for the assembler schema and
 optional subtitle fonts.
+
+### Games
+
+Deploy a browser-game ZIP whose root contains `index.html` and either `logic.js`
+or `server.js`:
+
+```bash
+higgsfield game deploy ./game.zip \
+  --title "Space Runner" \
+  --description "Fast arcade survival game" \
+  --thumbnail https://cdn.example/cover.png \
+  --favicon https://cdn.example/icon.png \
+  --json
+```
+
+Update the same game with `--game-id <game_id>`. Marketplace publication is a
+separate action:
+
+```bash
+higgsfield game publish <game_id> --name "Space Runner" --json
+```
+
+Browse the rigged 3D animation catalog before choosing an
+`animation_action_id`:
+
+```bash
+higgsfield preset list animation-action --query walk
+higgsfield preset list animation-action --group Fighting --category Punching --json
+```
 
 ### Soul ID
 
@@ -539,6 +569,7 @@ Add `--json` to any command for machine-readable output.
 | `higgsfield generate` | create / cost / wait / get / list jobs |
 | `higgsfield workflow` | list workflows, inspect workflow parameter schema |
 | `higgsfield preset` | list server-managed styles/actions and resolve explainer style inputs |
+| `higgsfield game` | deploy browser-game ZIPs and explicitly publish marketplace listings |
 | `higgsfield voices` | list voices / inspect a voice for text2speech & voice-change |
 | `higgsfield upload` | upload an image / video / audio file |
 | `higgsfield soul-id` | train and manage Soul characters |
