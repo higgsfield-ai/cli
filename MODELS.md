@@ -701,6 +701,98 @@ Constraints:
 - End_image requires start_image.
 - At most 1 audio reference is allowed.
 
+## Video explainer jobs
+
+These job types have similar names but different responsibilities:
+
+- `explainer_video` assembles ordered video/audio block pairs and is the final step used by the public explainer skill.
+- `video_explainer` is an alternate monolithic server-run workflow. The public skill does not use it.
+
+### video_explainer — Explainer Video
+
+| flag | required | default | values |
+|---|---|---|---|
+| `--prompt` | conditional | — | string, max 5000 characters |
+| `--medias` | false | `[]` | JSON array via `@file`; up to 14 images/files |
+| `--aspect_ratio` | false | `16:9` | `16:9`, `9:16` |
+| `--duration` | true | — | integer, 20–600, multiple of 10 |
+| `--preset_id` | false | — | UUID from `higgsfield preset list video-explainer` |
+| `--voice_type` | false | — | `preset`, `element` |
+| `--voice_id` | false | — | voice ID from `higgsfield voices list` |
+| `--folder_id` | false | — | UUID |
+
+Constraints:
+
+- `prompt` is required unless at least one image/file is attached.
+- Video and audio attachments are rejected.
+- `voice_type` and `voice_id` must be provided together.
+- `preset_id` controls style only; it does not replace the topic.
+- Job creation resolves the preset and imports its hidden style image automatically.
+
+Examples:
+
+```bash
+higgsfield preset list video-explainer --json
+
+higgsfield generate create video_explainer \
+  --prompt "Explain compound interest to teenagers. Narration language: English." \
+  --duration 60 \
+  --aspect_ratio 16:9 \
+  --preset_id <preset_id> \
+  --wait
+
+higgsfield generate create video_explainer \
+  --prompt "Explain the supplied diagrams. Narration language: Spanish." \
+  --image ./diagram-1.png \
+  --image ./diagram-2.png \
+  --duration 90 \
+  --aspect_ratio 9:16 \
+  --voice_type preset \
+  --voice_id <voice_id> \
+  --wait
+```
+
+This job remains available as a direct API surface, but `higgsfield-video-explainer`
+uses separately generated Seed Audio and Gemini Omni blocks followed by
+`explainer_video` so every narration take maps explicitly to one clip.
+
+### explainer_video — Explainer Video Assembler
+
+Assembler for callers that already generated ordered clip/audio pairs. It does
+not plan a narrative, choose a style, generate clips, or create narration.
+
+| flag | required | default | values |
+|---|---|---|---|
+| `--width` | true | — | even integer greater than 1 |
+| `--height` | true | — | even integer greater than 1 |
+| `--items` | true | — | JSON array via `@file`; at least 2 items |
+| `--subtitles` | false | — | JSON object; font: `patrick`, `caveat`, `marker`, `anton` |
+
+Each item contains `video: {id,type}` and optional `audio: {id,type}`. Completed
+generation jobs may use the generic types `video_job` and `audio_job`:
+
+```json
+[
+  {
+    "video": {"id": "<clip-1-job-id>", "type": "video_job"},
+    "audio": {"id": "<voice-1-job-id>", "type": "audio_job"}
+  },
+  {
+    "video": {"id": "<clip-2-job-id>", "type": "video_job"},
+    "audio": {"id": "<voice-2-job-id>", "type": "audio_job"}
+  }
+]
+```
+
+```bash
+higgsfield generate create explainer_video \
+  --items @blocks.json \
+  --width 1280 \
+  --height 720 \
+  --subtitles '{"font":"patrick"}' \
+  --wait
+```
+
 ## 3D (5)
 
 ### 3d_rigging — 3D Rigging
@@ -890,5 +982,4 @@ Example:
 higgsfield generate create text2speech_v2 --prompt "Hello from Higgsfield" --variant elevenlabs --voice_type preset --voice_id <voice_id> --wait
 ```
 
-Additional utility job types (upscale, background removal, transcription, etc.) are available; run `higgsfield model get <job_type>` for their schemas: `autosprite`, `bytedance_image_upscale`, `bytedance_video_upscale`, `clipify`, `color_grading_lut`, `explainer_video`, `llm_text`, `sam_3_video`, `speech2text`, `topaz_image`, `topaz_video`, `video_deflicker`, `video_upscale`.
-
+Additional utility job types (upscale, background removal, transcription, etc.) are available; run `higgsfield model get <job_type>` for their schemas: `autosprite`, `bytedance_image_upscale`, `bytedance_video_upscale`, `clipify`, `color_grading_lut`, `llm_text`, `sam_3_video`, `speech2text`, `topaz_image`, `topaz_video`, `video_deflicker`, `video_upscale`.

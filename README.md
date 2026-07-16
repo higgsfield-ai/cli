@@ -15,6 +15,7 @@ Generate images, videos, 3D assets, audio, and finished-video analysis from the 
 - [Examples](#examples)
 - [Models](#models)
 - [Workflows](#workflows)
+- [Video Explainer](#video-explainer)
 - [Websites](#websites)
 - [Commands](#commands)
 - [Flags](#flags)
@@ -175,6 +176,35 @@ List available voices (presets + your custom voices) to get a `voice_id` for
 higgsfield voices list
 higgsfield voices get <voice_id> --json
 ```
+
+### Video Explainer
+
+The explainer skill builds matched 10-second blocks: resolve a style, generate
+all narration with Seed Audio first, generate the corresponding Gemini Omni
+clips second, then assemble the ordered pairs with `explainer_video`:
+
+```bash
+higgsfield preset list video-explainer --json
+higgsfield preset resolve video-explainer <preset_id> --json
+higgsfield voices list --json
+
+higgsfield generate create seed_audio \
+  --prompt "<Block 1 narration>" \
+  --voice_type preset --voice_id <voice_id> --wait --json
+
+higgsfield generate create gemini_omni \
+  --prompt "<Block 1 visual prompt>" \
+  --image <resolved_style_media_id> \
+  --duration 10 --resolution 720p --aspect_ratio 16:9 --wait --json
+
+higgsfield generate create explainer_video \
+  --items @blocks.json --width 1280 --height 720 --wait --json
+```
+
+Repeat the audio/video calls once per block. `blocks.json` maps every clip job to
+its matching audio job in playback order. See
+[MODELS.md](./MODELS.md#video-explainer-jobs) for the assembler schema and
+optional subtitle fonts.
 
 ### Soul ID
 
@@ -508,6 +538,7 @@ Add `--json` to any command for machine-readable output.
 | `higgsfield model` | list models, inspect parameter schema |
 | `higgsfield generate` | create / cost / wait / get / list jobs |
 | `higgsfield workflow` | list workflows, inspect workflow parameter schema |
+| `higgsfield preset` | list server-managed styles/actions and resolve explainer style inputs |
 | `higgsfield voices` | list voices / inspect a voice for text2speech & voice-change |
 | `higgsfield upload` | upload an image / video / audio file |
 | `higgsfield soul-id` | train and manage Soul characters |
