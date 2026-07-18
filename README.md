@@ -424,6 +424,13 @@ branch.
 - **`app`** — a product tightly integrated with Higgsfield: its users sign in
   with Higgsfield and generate images/videos through the Higgsfield SDK.
 
+`create` also requires `--category` — the content category the site is filed
+under on the marketplace. It's a slug from a curated taxonomy (e.g.
+`cinematic`, `ads-marketing`, `ugc-social`, `other`); run
+`higgsfield website categories` to see the full list, then pass the closest one
+(use `other` when nothing fits). The taxonomy can grow over time, so the server
+validates the slug and rejects an unknown one.
+
 `--type app` also requires `--template`. The flag has exactly four choices:
 
 | Template | Pick when |
@@ -457,26 +464,29 @@ subdomains are rejected — pick another.
 Create a standalone website or an app using the closest starter template:
 
 ```bash
-higgsfield website create --type website
+higgsfield website create --type website --category other
 
 higgsfield website create \
   --type app \
+  --category product-ecommerce \
   --template app-detail
 
 higgsfield website create \
   --type app \
+  --category ads-marketing \
   --template preset \
   --subdomain my-app
 
 higgsfield website create \
   --type app \
+  --category cinematic \
   --template studio
 ```
 
 App create results preserve the selected template. Human-readable table output
-includes a **Template** column (alongside Website ID, Type, Slug, Name, Preview
-URL, and Production URL), and non-custom apps also print the shipped layout
-path. JSON output includes `"template"` for apps:
+includes **Category** and **Template** columns (alongside Website ID, Type,
+Slug, Name, Preview URL, and Production URL), and non-custom apps also print the
+shipped layout path. JSON output includes `"template"` for apps:
 
 ```json
 {
@@ -556,6 +566,13 @@ List the sites you own:
 higgsfield website list
 ```
 
+List the content categories a site can be filed under (the `--category` slugs
+for `create`), each with its slug, label, and description:
+
+```bash
+higgsfield website categories
+```
+
 Add `--json` to any command for machine-readable output.
 
 ## Commands
@@ -575,7 +592,7 @@ Add `--json` to any command for machine-readable output.
 | `higgsfield soul-id` | train and manage Soul characters |
 | `higgsfield marketing-studio` | branded ads (avatars, products, ad references, brand kits, ad formats, DTC Ads Engine) |
 | `higgsfield product-photoshoot` | brand image generation with mode-specific enhancement |
-| `higgsfield website` | create (`--type website\|app`; apps require `--template app-detail\|preset\|studio\|custom`, with `custom` only by explicit request) / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / enter the app contest (auto-publishes) / inspect DB / manage secrets for full-stack websites |
+| `higgsfield website` | create (`--type website\|app`, `--category <slug>`; apps require `--template app-detail\|preset\|studio\|custom`, with `custom` only by explicit request) / list categories / edit (via git repo access) / deploy / rename the subdomain / publish to the community feed / enter the app contest (auto-publishes) / inspect DB / manage secrets for full-stack websites |
 | `higgsfield version` | print build info |
 
 Run `higgsfield <command> --help` for flags and examples (also `higgsfield generate create --help`, `higgsfield soul-id create --help`, etc.).
