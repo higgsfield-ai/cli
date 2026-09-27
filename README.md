@@ -20,6 +20,7 @@ Generate images, videos, 3D assets, audio, and finished-video analysis from the 
 - [Websites](#websites)
 - [Commands](#commands)
 - [Flags](#flags)
+- [Spending controls for agents](#spending-controls-for-agents)
 - [Updating](#updating)
 - [Uninstall](#uninstall)
 - [Troubleshooting](#troubleshooting)
@@ -621,6 +622,32 @@ Example pipeline:
 higgsfield generate list --json | jq -r '.[] | select(.status=="completed") | .result_url'
 ```
 
+## Spending controls for agents
+
+Every job submitted through the CLI deducts credits, regardless of plan. A `--wait` timeout or a lost connection does not cancel the job: the submit may already have been accepted and charged. When an agent or script runs unattended, wrap `generate create` with these steps:
+
+| Step | Command | Note |
+|---|---|---|
+| Check balance | `higgsfield account status --json` | stop the run if credits are below the planned spend |
+| Estimate first | `higgsfield generate cost <job_type> [--param value]... --json` | same params and media flags as `create`; local files are uploaded, no job is created |
+| Submit once | `higgsfield generate create <job_type> [--param value]... --json` | keep the returned job id |
+| Never resubmit blind | `higgsfield generate list --json`, `higgsfield generate get <job_id>` | after a timeout, look the job up before sending the same params again |
+
+```bash
+# 1. estimate (creates no job)
+higgsfield generate cost nano_banana_2 --prompt "studio product photo" --json
+
+# 2. submit only if the estimate fits the budget
+higgsfield generate create nano_banana_2 --prompt "studio product photo" --json
+
+# 3. after a timeout, find the job instead of resubmitting
+higgsfield generate list --image --json
+```
+
+Models without cost estimation (`voice-change`, `dubbing`, and workflows that answer `Cost estimation is not available`) reveal their price only after billing. Treat them as unpriced: do not submit them from a retry loop without a human decision.
+
+The CLI has no built-in per-call ceiling yet; a proposal is tracked in [#95](https://github.com/higgsfield-ai/cli/issues/95). Until then, enforce the ceiling in the calling script or agent hook.
+
 ## Updating
 
 ```bash
@@ -660,6 +687,8 @@ npm uninstall -g @higgsfield/cli
 **`Session expired` / `Not authenticated`** — tokens are short-lived. Re-run `higgsfield auth login`.
 
 **`Unknown model "<name>"`** — run `higgsfield model list` for the current catalog.
+
+**Charged for a job that timed out** — the CLI bills on submit and `--wait` only polls. The job kept running; find it with `higgsfield generate list` before submitting again. See [Spending controls for agents](#spending-controls-for-agents).
 
 ## Support
 
