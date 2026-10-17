@@ -322,10 +322,23 @@ Constraints:
 | `--prompt` | true | — | string |
 | `--quality` | false | `2k` | `1.5k`, `2k` |
 | `--soul-id` (or `--custom-reference-id`) | false | — | Soul UUID |
+| `--style_id` | false | general style | Curated UUID from `higgsfield preset list soul-v2` |
 
 Constraints:
 
 - At most one image reference is allowed.
+- `style_id` cannot be combined with an image reference. A Soul Character (`--soul-id`) can be combined with a style.
+
+Browse curated styles, then pass the selected ID:
+
+```bash
+higgsfield preset list soul-v2 --query exposure
+higgsfield generate create text2image_soul_v2 \
+  --prompt "editorial portrait in evening light" \
+  --style_id <style_id> --wait
+```
+
+Style selection requires the API schema shown by `higgsfield model get text2image_soul_v2` to include `style_id`.
 
 ### z_image — Z Image
 
